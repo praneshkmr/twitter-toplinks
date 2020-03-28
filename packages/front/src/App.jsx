@@ -1,25 +1,22 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 function App() {
+  const [foo, setFoo] = useState('N/A');
+  useEffect(
+    () => {
+      fetch('/api/foo')
+        .then((res) => res.json())
+        .then((data) => setFoo(data.foo))
+        .catch((err) => setFoo(err.message));
+    },
+  );
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Edit
-          {' '}
-          <code>src/App.js</code>
-          {' '}
-          and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Hello World</h1>
+      <p>
+        Server responded with foo:
+        {foo}
+      </p>
     </div>
   );
 }
