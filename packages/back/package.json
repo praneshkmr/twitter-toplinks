@@ -7,11 +7,18 @@
     "build": "npx babel src -d build",
     "start": "nodemon --exec ./node_modules/@babel/node/bin/babel-node.js src/index",
     "lint": "npx eslint --fix *.js src test *.js",
+    "precommit": "lint-staged",
     "test": "jest"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "lint-staged": {
+    "**/*.js": [
+      "yarn lint",
+      "git add"
+    ]
+  },
   "dependencies": {
     "body-parser": "^1.19.0",
     "express": "^4.17.1"
@@ -25,6 +32,7 @@
     "eslint-config-airbnb-base": "^14.1.0",
     "eslint-plugin-import": "^2.18.2",
     "jest": "^25.2.3",
+    "lint-staged": "^10.0.9",
     "nodemon": "^2.0.2",
     "prettier": "^2.0.2",
     "supertest": "^4.0.2"
