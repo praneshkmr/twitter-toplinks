@@ -5,8 +5,7 @@ import session from 'express-session';
 import path from 'path';
 
 import twitter from './routes/twitter';
-
-import { VerifyCredentials, GetHomeTimeline } from './external/twitter';
+import './mongoose';
 
 const app = express();
 
@@ -23,15 +22,8 @@ app.use((req, res, next) => {
 app.use('/auth/twitter', twitter);
 
 app.get('/home', (req, res) => {
-  if (req.session.oauthAccessToken && req.session.oauthAccessTokenSecret) {
-    VerifyCredentials(req.session.oauthAccessToken, req.session.oauthAccessTokenSecret).then(() => {
-      GetHomeTimeline(req.session.oauthAccessToken, req.session.oauthAccessTokenSecret).then((data) => {
-        res.send(data);
-      });
-    }).catch((error) => {
-      console.log(error);
-      res.redirect('/auth/twitter');
-    });
+  if (req.session.user) {
+    res.send(req.session.user);
   } else {
     res.redirect('/auth/twitter');
   }

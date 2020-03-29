@@ -1,7 +1,8 @@
 import express from 'express';
 import inspect from 'util-inspect';
 
-import { GetOAuthRequestToken, GetOAuthAccessToken } from '../external/twitter';
+import { GetOAuthRequestToken, GetOAuthAccessToken, VerifyCredentials } from '../external/twitter';
+import { UpsertUserFromTwitter } from '../models/user';
 
 const router = express.Router();
 
@@ -17,12 +18,17 @@ router.get('/', (req, res) => {
 
 router.get('/callback', (req, res) => {
   if (req.session.oauthRequestToken && req.session.oauthRequestTokenSecret) {
-    GetOAuthAccessToken(req.session.oauthRequestToken, req.session.oauthRequestTokenSecret,
-      req.query.oauth_verifier)
+    GetOAuthAccessToken(req.session.oauthRequestToken, req.session.oauthRequestTokenSecret, req.query.oauth_verifier)
       .then(({ oauthAccessToken, oauthAccessTokenSecret }) => {
-        req.session.oauthAccessToken = oauthAccessToken;
-        req.session.oauthAccessTokenSecret = oauthAccessTokenSecret;
-        res.redirect('/home');
+        VerifyCredentials(oauthAccessToken, oauthAccessTokenSecret).then((data) => {
+          UpsertUserFromTwitter(data, oauthAccessToken, oauthAccessTokenSecret).then((user) => {
+            req.session.user = user;
+            res.redirect('/home');
+          }).catch((error) => {
+            console.error(error);
+            res.status(500).send('Error finding User');
+          });
+        });
       }).catch((error) => {
         res.send(`Error getting OAuth access token : ${inspect(error)}[${req.session.oauthAccessToken}] [${req.session.oauthAccessTokenSecret}]`, 500);
       });

@@ -1,8 +1,8 @@
 import oauth from 'oauth';
 
 // Get your credentials here: https://dev.twitter.com/apps
-const twitterConsumerKey = 'S1c1pnhGdtxFtPqFZKawFi9TK';
-const twitterConsumerSecret = 'sbVAc0FTATQk4dBqpPVk4700GsWIHjNbjjxw1zIJRLFkGQqcO6';
+const twitterConsumerKey = 'Ui2gs8QQnj7fMpdOVlx2V7TMS';
+const twitterConsumerSecret = 'otw6YCht6l8Xke0PmiNkHOkAgZ3pHYh7kVczmbqxk7vSK6XTWu';
 
 const consumer = new oauth.OAuth(
   'https://twitter.com/oauth/request_token', 'https://twitter.com/oauth/access_token',
