@@ -1,15 +1,50 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
+import session from 'express-session';
 import path from 'path';
 
-// Check whether we are in production env
-const isProd = process.env.NODE_ENV === 'production';
+import twitter from './routes/twitter';
+
+import { VerifyCredentials, GetHomeTimeline } from './external/twitter';
 
 const app = express();
+
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(cookieParser());
+app.use(session({ secret: 'very secret', resave: false, saveUninitialized: true }));
+
+app.use((req, res, next) => {
+  res.locals.session = req.session;
+  next();
+});
+
+app.use('/auth/twitter', twitter);
+
+app.get('/home', (req, res) => {
+  if (req.session.oauthAccessToken && req.session.oauthAccessTokenSecret) {
+    VerifyCredentials(req.session.oauthAccessToken, req.session.oauthAccessTokenSecret).then(() => {
+      GetHomeTimeline(req.session.oauthAccessToken, req.session.oauthAccessTokenSecret).then((data) => {
+        res.send(data);
+      });
+    }).catch((error) => {
+      console.log(error);
+      res.redirect('/auth/twitter');
+    });
+  } else {
+    res.redirect('/auth/twitter');
+  }
+});
 
 app.get('/api/foo', (req, res) => res.json({ foo: 'bar' }));
 
+app.get('*', (req, res) => {
+  res.redirect('/home');
+});
+
+// Check whether we are in production env
+const isProd = process.env.NODE_ENV === 'production';
 if (isProd) {
   // Compute the build path and index.html path
   const buildPath = path.resolve(__dirname, '../../front/build');
