@@ -37,4 +37,9 @@ router.get('/callback', (req, res) => {
   }
 });
 
+router.get('/logout', (req, res) => {
+  req.session.user = null;
+  res.send(200);
+});
+
 export default router;
