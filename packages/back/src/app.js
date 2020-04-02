@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import path from 'path';
+import cors from 'cors';
 
 import './mongoose';
 
@@ -18,6 +19,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(session({ secret: 'very secret', resave: false, saveUninitialized: true }));
+const corsOptions = {
+  origin: 'http://localhost:3000',
+  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+  credentials: true,
+};
+app.use(cors(corsOptions));
 
 app.use((req, res, next) => {
   res.locals.session = req.session;
