@@ -6,40 +6,46 @@ import { UpsertUserFromTwitter } from '../models/user';
 
 const router = express.Router();
 
+const oauthTokenStore = {};
+
 router.get('/', (req, res) => {
   GetOAuthRequestToken().then(({ oauthToken, oauthTokenSecret }) => {
-    req.session.oauthRequestToken = oauthToken;
-    req.session.oauthRequestTokenSecret = oauthTokenSecret;
-    res.redirect(`https://twitter.com/oauth/authorize?oauth_token=${req.session.oauthRequestToken}`);
+    oauthTokenStore[oauthToken] = oauthTokenSecret;
+    res.send({ oauthRequestToken: oauthToken });
   }).catch((error) => {
     res.send(`Error getting OAuth request token : ${inspect(error)}`, 500);
   });
 });
 
 router.get('/callback', (req, res) => {
-  if (req.session.oauthRequestToken && req.session.oauthRequestTokenSecret) {
-    GetOAuthAccessToken(req.session.oauthRequestToken, req.session.oauthRequestTokenSecret, req.query.oauth_verifier)
-      .then(({ oauthAccessToken, oauthAccessTokenSecret }) => {
-        VerifyCredentials(oauthAccessToken, oauthAccessTokenSecret).then((data) => {
-          UpsertUserFromTwitter(data, oauthAccessToken, oauthAccessTokenSecret).then((user) => {
-            req.session.user = user;
-            if (req.session.redirect) {
-              const { redirect } = req.session;
-              req.session.redirect = null;
-              res.redirect(redirect);
-            } else {
-              res.redirect('/home');
-            }
-          }).catch((error) => {
-            console.error(error);
-            res.status(500).send('Error finding User');
-          });
-        });
+  if (req.query.oauth_token && req.query.oauth_verifier) {
+    const oauthVerifier = req.query.oauth_verifier;
+    const oauthRequestToken = req.query.oauth_token;
+    const oauthRequestTokenSecret = oauthTokenStore[oauthRequestToken];
+    if (!oauthRequestTokenSecret) {
+      res.status(400).send('oauth_token is invalid');
+      return;
+    }
+    oauthTokenStore[oauthRequestToken] = undefined;
+    GetOAuthAccessToken(oauthRequestToken, oauthRequestTokenSecret, oauthVerifier)
+      .then(({ oauthAccessToken, oauthAccessTokenSecret }) => VerifyCredentials(oauthAccessToken, oauthAccessTokenSecret).then((data) => UpsertUserFromTwitter(data, oauthAccessToken, oauthAccessTokenSecret).then((user) => {
+        req.session.user = user;
+        if (req.session.redirect) {
+          const { redirect } = req.session;
+          req.session.redirect = null;
+          res.redirect(redirect);
+        } else {
+          res.sendStatus(200);
+        }
       }).catch((error) => {
-        res.send(`Error getting OAuth access token : ${inspect(error)}[${req.session.oauthAccessToken}] [${req.session.oauthAccessTokenSecret}]`, 500);
+        console.error(error);
+        res.status(500).send('Error finding User');
+      }))).catch((error) => {
+        console.error(error);
+        res.status(500).send(`Error getting OAuth access token : ${inspect(error)}[${req.session.oauthAccessToken}] [${req.session.oauthAccessTokenSecret}]`);
       });
   } else {
-    res.redirect('/auth/twitter');
+    res.status(400).send('need both oauth_token and oauth_verifier');
   }
 });
 

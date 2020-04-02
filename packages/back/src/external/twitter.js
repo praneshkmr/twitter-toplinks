@@ -7,7 +7,7 @@ const twitterConsumerSecret = 'otw6YCht6l8Xke0PmiNkHOkAgZ3pHYh7kVczmbqxk7vSK6XTW
 
 const consumer = new oauth.OAuth(
   'https://twitter.com/oauth/request_token', 'https://twitter.com/oauth/access_token',
-  twitterConsumerKey, twitterConsumerSecret, '1.0A', 'http://127.0.0.1:5000/auth/twitter/callback', 'HMAC-SHA1',
+  twitterConsumerKey, twitterConsumerSecret, '1.0A', 'http://localhost:3000/auth/twitter/callback', 'HMAC-SHA1',
 );
 
 export const GetOAuthRequestToken = () => new Promise((resolve, reject) => {

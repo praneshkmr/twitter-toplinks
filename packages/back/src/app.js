@@ -9,7 +9,6 @@ import './mongoose';
 
 import twitterRoutes from './routes/twitter';
 import { SearchTweets } from './external/twitter';
-
 import { GetTweetsStats } from './services/tweets_service';
 import { GetUserTweets } from './models/userTweets';
 
@@ -36,15 +35,19 @@ const requireUser = () => (req, res, next) => {
     next();
   } else {
     req.session.redirect = req.originalUrl;
-    res.redirect('/auth/twitter');
+    res.redirect('/');
   }
 };
 
 app.use('/auth/twitter', twitterRoutes);
 
-app.get('/home', requireUser(), (req, res) => {
-  const { user } = req.session;
-  res.send(user);
+app.get('/user/me', (req, res) => {
+  if (req.session.user) {
+    const { user } = req.session;
+    res.send(user);
+  } else {
+    res.send(401);
+  }
 });
 
 app.get('/process', requireUser(), (req, res) => {
@@ -88,9 +91,9 @@ app.get('/tweets/search', requireUser(), (req, res) => {
 
 app.get('/api/foo', (req, res) => res.json({ foo: 'bar' }));
 
-app.get('*', (req, res) => {
-  res.redirect('/home');
-});
+// app.get('*', (req, res) => {
+//   res.redirect('/home');
+// });
 
 // Check whether we are in production env
 const isProd = process.env.NODE_ENV === 'production';
