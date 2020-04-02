@@ -16,6 +16,8 @@ module.exports = {
         "sourceType": "module"
     },
     "rules": {
-        'max-len': 0
+        'max-len': 0,
+        'no-undef': 0,
+        'no-underscore-dangle': 0
     }
 };

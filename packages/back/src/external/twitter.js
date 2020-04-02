@@ -1,4 +1,5 @@
 import oauth from 'oauth';
+import { GetQueryParams } from '../utils/queryParams';
 
 // Get your credentials here: https://dev.twitter.com/apps
 const twitterConsumerKey = 'Ui2gs8QQnj7fMpdOVlx2V7TMS';
@@ -42,8 +43,39 @@ export const VerifyCredentials = (oauthAccessToken, oauthAccessTokenSecret) => n
     });
 });
 
-export const GetHomeTimeline = (oauthAccessToken, oauthAccessTokenSecret) => new Promise((resolve, reject) => {
-  consumer.get('https://api.twitter.com/1.1/statuses/home_timeline.json', oauthAccessToken, oauthAccessTokenSecret,
+export const GetHomeTimeline = (oauthAccessToken, oauthAccessTokenSecret, options) => new Promise((resolve, reject) => {
+  let paramsText = '';
+  if (options) {
+    const { sinceId, count } = options;
+    const params = { since_id: sinceId, count };
+    paramsText = GetQueryParams(params);
+  }
+  consumer.get(`https://api.twitter.com/1.1/statuses/home_timeline.json?${paramsText}`, oauthAccessToken, oauthAccessTokenSecret,
+    (error, data) => {
+      if (error) {
+        reject(error);
+      } else {
+        const parsedData = JSON.parse(data);
+        resolve(parsedData);
+      }
+    });
+});
+
+export const SearchTweets = (oauthAccessToken, oauthAccessTokenSecret, options) => new Promise((resolve, reject) => {
+  let paramsText = '';
+  if (!options.q) {
+    reject(new Error('q param is required'));
+  }
+  if (options) {
+    const {
+      q, latitude, longitude, radius,
+    } = options;
+    const params = {
+      q, latitude, longitude, radius,
+    };
+    paramsText = GetQueryParams(params);
+  }
+  consumer.get(`https://api.twitter.com/1.1/search/tweets.json?${paramsText}`, oauthAccessToken, oauthAccessTokenSecret,
     (error, data) => {
       if (error) {
         reject(error);

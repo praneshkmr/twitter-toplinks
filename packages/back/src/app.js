@@ -4,8 +4,13 @@ import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import path from 'path';
 
-import twitter from './routes/twitter';
 import './mongoose';
+
+import twitterRoutes from './routes/twitter';
+import { SearchTweets } from './external/twitter';
+
+import { GetTweetsStats } from './services/tweets_service';
+import { GetUserTweets } from './models/userTweets';
 
 const app = express();
 
@@ -19,14 +24,59 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/auth/twitter', twitter);
-
-app.get('/home', (req, res) => {
+const requireUser = () => (req, res, next) => {
   if (req.session.user) {
-    res.send(req.session.user);
+    next();
   } else {
+    req.session.redirect = req.originalUrl;
     res.redirect('/auth/twitter');
   }
+};
+
+app.use('/auth/twitter', twitterRoutes);
+
+app.get('/home', requireUser(), (req, res) => {
+  const { user } = req.session;
+  res.send(user);
+});
+
+app.get('/process', requireUser(), (req, res) => {
+  const { user } = req.session;
+  Store7DaysTweets(user).then((tweets) => {
+    res.send(tweets);
+  }).catch(((error) => {
+    res.status(500).send(error);
+  }));
+});
+
+app.get('/stats', (req, res) => {
+  GetTweetsStats().then((results) => {
+    res.send(results);
+  }).catch(((error) => {
+    res.status(500).send(error);
+  }));
+});
+
+app.get('/tweets', requireUser(), (req, res) => {
+  const { user } = req.session;
+  GetUserTweets(user).then((userTweets) => {
+    res.send(userTweets);
+  }).catch(((error) => {
+    res.status(500).send(error);
+  }));
+});
+
+app.get('/tweets/search', requireUser(), (req, res) => {
+  const { user } = req.session;
+  const { oauth } = user;
+  const { twitter } = oauth;
+  const { oauthAccessToken, oauthAccessTokenSecret } = twitter;
+  const options = req.query;
+  SearchTweets(oauthAccessToken, oauthAccessTokenSecret, options).then((tweets) => {
+    res.send(tweets);
+  }).catch(((error) => {
+    res.status(500).send(error);
+  }));
 });
 
 app.get('/api/foo', (req, res) => res.json({ foo: 'bar' }));

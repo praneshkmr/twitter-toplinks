@@ -23,7 +23,13 @@ router.get('/callback', (req, res) => {
         VerifyCredentials(oauthAccessToken, oauthAccessTokenSecret).then((data) => {
           UpsertUserFromTwitter(data, oauthAccessToken, oauthAccessTokenSecret).then((user) => {
             req.session.user = user;
-            res.redirect('/home');
+            if (req.session.redirect) {
+              const { redirect } = req.session;
+              req.session.redirect = null;
+              res.redirect(redirect);
+            } else {
+              res.redirect('/home');
+            }
           }).catch((error) => {
             console.error(error);
             res.status(500).send('Error finding User');

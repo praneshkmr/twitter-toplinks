@@ -1,4 +1,5 @@
 import { Schema, model } from 'mongoose';
+import { CreateUserTweets } from './userTweets';
 
 const userSchema = new Schema({
   name: String,
@@ -36,7 +37,13 @@ export const UpsertUserFromTwitter = (twitterData, oauthAccessToken, oauthAccess
         if (createError) {
           reject(createError);
         } if (createdUser) {
-          resolve(createdUser);
+          CreateUserTweets(createdUser).then((err) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve();
+            }
+          });
         }
       });
     }
