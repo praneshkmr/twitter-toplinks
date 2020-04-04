@@ -5,4 +5,13 @@ import './models/tweet';
 import './models/userTweets';
 import './models/mostSharedLinks';
 
-mongoose.connect('mongodb://localhost/test');
+export const StartDev = () => {
+  mongoose.connect('mongodb://localhost/test');
+  return mongoose;
+};
+
+
+export const StartTest = () => {
+  mongoose.connect('mongodb://localhost/test2');
+  return mongoose;
+};

@@ -1,4 +1,7 @@
 import app from './app';
+import { StartDev } from './mongoose';
+
+StartDev();
 
 const port = process.env.PORT || 5000;
 

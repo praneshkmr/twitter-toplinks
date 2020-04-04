@@ -5,12 +5,13 @@ import session from 'express-session';
 import path from 'path';
 import cors from 'cors';
 
-import './mongoose';
-
+import usersRoutes from './routes/users';
 import twitterRoutes from './routes/twitter';
+import tweetsRoute from './routes/tweets';
 import { SearchTweets } from './external/twitter';
 import { GetTweetsStats } from './services/tweets_service';
 import { GetUserTweets } from './models/userTweets';
+import { RequireUser } from './utils/auth';
 
 const app = express();
 
@@ -30,32 +31,16 @@ app.use((req, res, next) => {
   next();
 });
 
-const requireUser = () => (req, res, next) => {
-  if (req.session.user) {
-    next();
-  } else {
-    req.session.redirect = req.originalUrl;
-    res.redirect('/');
-  }
-};
-
 app.use('/auth/twitter', twitterRoutes);
+app.use('/tweets', tweetsRoute);
+app.use('/users', usersRoutes);
 
-app.get('/user/me', (req, res) => {
-  if (req.session.user) {
-    const { user } = req.session;
-    res.send(user);
-  } else {
-    res.send(401);
-  }
-});
-
-app.get('/process', requireUser(), (req, res) => {
+app.get('/process', RequireUser(), (req, res) => {
   const { user } = req.session;
   Store7DaysTweets(user).then((tweets) => {
     res.send(tweets);
   }).catch(((error) => {
-    res.status(500).send(error);
+    res.status(500).send(error.message);
   }));
 });
 
@@ -63,20 +48,20 @@ app.get('/stats', (req, res) => {
   GetTweetsStats().then((results) => {
     res.send(results);
   }).catch(((error) => {
-    res.status(500).send(error);
+    res.status(500).send(error.message);
   }));
 });
 
-app.get('/tweets', requireUser(), (req, res) => {
+app.get('/tweets', RequireUser(), (req, res) => {
   const { user } = req.session;
   GetUserTweets(user).then((userTweets) => {
     res.send(userTweets);
   }).catch(((error) => {
-    res.status(500).send(error);
+    res.status(500).send(error.message);
   }));
 });
 
-app.get('/tweets/search', requireUser(), (req, res) => {
+app.get('/tweets/search', RequireUser(), (req, res) => {
   const { user } = req.session;
   const { oauth } = user;
   const { twitter } = oauth;
@@ -85,7 +70,7 @@ app.get('/tweets/search', requireUser(), (req, res) => {
   SearchTweets(oauthAccessToken, oauthAccessTokenSecret, options).then((tweets) => {
     res.send(tweets);
   }).catch(((error) => {
-    res.status(500).send(error);
+    res.status(500).send(error.message);
   }));
 });
 

@@ -96,6 +96,8 @@ const tweetSchema = new Schema({
 
 const Tweets = model('Tweets', tweetSchema);
 
+export default Tweets;
+
 export const UpsertTweets = (tweets) => new Promise((resolve, reject) => {
   const result = [];
   each(tweets, (tweet, callback) => {

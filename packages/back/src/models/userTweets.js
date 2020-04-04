@@ -15,6 +15,8 @@ const userTweetsSchema = new Schema({
 
 const UserTweets = model('userTweets', userTweetsSchema);
 
+export default UserTweets;
+
 export const SetUserTweets = (user, tweets) => new Promise((resolve, reject) => {
   UpsertTweets(tweets).then((savedTweets) => {
     UserTweets.findOne({ user }).exec((errFind, userTweetsDoc) => {

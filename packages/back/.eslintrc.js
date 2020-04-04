@@ -18,6 +18,7 @@ module.exports = {
     "rules": {
         'max-len': 0,
         'no-undef': 0,
-        'no-underscore-dangle': 0
+        'no-underscore-dangle': 0,
+        'import/prefer-default-export': 0
     }
 };
