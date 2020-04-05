@@ -1,13 +1,15 @@
 import oauth from 'oauth';
 import { GetQueryParams } from '../utils/queryParams';
+import Config from '../config';
 
 // Get your credentials here: https://dev.twitter.com/apps
-const twitterConsumerKey = 'Ui2gs8QQnj7fMpdOVlx2V7TMS';
-const twitterConsumerSecret = 'otw6YCht6l8Xke0PmiNkHOkAgZ3pHYh7kVczmbqxk7vSK6XTWu';
+const twitterConsumerKey = Config.TWITTER_CONSUMER_KEY;
+const twitterConsumerSecret = Config.TWITTER_CONSUMER_SECRET;
+const twitterAuthCallback = Config.TWITTER_CALLBACK_URL;
 
 const consumer = new oauth.OAuth(
   'https://twitter.com/oauth/request_token', 'https://twitter.com/oauth/access_token',
-  twitterConsumerKey, twitterConsumerSecret, '1.0A', 'http://localhost:3000/auth/twitter/callback', 'HMAC-SHA1',
+  twitterConsumerKey, twitterConsumerSecret, '1.0A', twitterAuthCallback, 'HMAC-SHA1',
 );
 
 export const GetOAuthRequestToken = () => new Promise((resolve, reject) => {
