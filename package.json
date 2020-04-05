@@ -15,6 +15,9 @@
   },
   "scripts": {
     "lint": "lerna run lint --stream",
-    "start": "lerna run start --stream"
+    "dev": "lerna run dev --stream",
+    "heroku-prebuild": "sh installDeps.sh",
+    "heroku-postbuild": "(cd packages/back && yarn build) && cd packages/front && yarn build",
+    "start": "cd packages/back && NODE_ENV=production node build/index"
   }
 }

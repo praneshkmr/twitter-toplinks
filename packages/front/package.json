@@ -18,7 +18,8 @@
   },
   "scripts": {
     "start": "cross-env CI=true react-scripts start",
-    "build": "react-scripts build",
+    "dev": "cross-env CI=true react-scripts start",
+    "build": "cross-env react-scripts build",
     "test": "cross-env CI=true react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "precommit": "lint-staged && yarn test",
@@ -76,7 +77,7 @@
       "git add"
     ]
   },
-  "proxy": "http://localhost:5000",
+  "proxy": "https://twitter-loplinks.herokuapp.com",
   "devDependencies": {
     "babel-eslint": "^10.1.0",
     "cross-env": "^7.0.2",
