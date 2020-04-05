@@ -3,6 +3,7 @@ import inspect from 'util-inspect';
 
 import { GetOAuthRequestToken, GetOAuthAccessToken, VerifyCredentials } from '../external/twitter';
 import { UpsertUserFromTwitter } from '../models/user';
+import { Store7DaysTweets } from '../services/tweets_service';
 
 const router = express.Router();
 
@@ -30,13 +31,8 @@ router.get('/callback', (req, res) => {
     GetOAuthAccessToken(oauthRequestToken, oauthRequestTokenSecret, oauthVerifier)
       .then(({ oauthAccessToken, oauthAccessTokenSecret }) => VerifyCredentials(oauthAccessToken, oauthAccessTokenSecret).then((data) => UpsertUserFromTwitter(data, oauthAccessToken, oauthAccessTokenSecret).then((user) => {
         req.session.user = user;
-        if (req.session.redirect) {
-          const { redirect } = req.session;
-          req.session.redirect = null;
-          res.redirect(redirect);
-        } else {
-          res.sendStatus(200);
-        }
+        res.sendStatus(200);
+        Store7DaysTweets(user);
       }).catch((error) => {
         console.error(error);
         res.status(500).send('Error finding User');

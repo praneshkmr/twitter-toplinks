@@ -9,7 +9,7 @@ import { StartTest } from '../src/mongoose';
 describe('tweets route', () => {
   StartTest();
 
-  it('GETs /user/me', async () => {
+  it('GETs /users/me', async () => {
     const authUser = GetTestUser({ name: 'User 1' });
     await authUser.save().then(async (authUserDoc) => {
       expect(authUserDoc._id).not.toBeFalsy();

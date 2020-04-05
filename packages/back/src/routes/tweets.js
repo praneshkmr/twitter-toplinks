@@ -13,7 +13,7 @@ router.get('/', RequireUser(), (req, res) => {
 
   UserTweets.findOne({ user }).then((userTweets) => {
     const tweetsQuery = userTweets.toJSON().tweets.map((tweet) => (tweet));
-    const dbPromise = Tweets.find({ _id: { $in: tweetsQuery } });
+    const dbPromise = Tweets.find({ _id: { $in: tweetsQuery } }).sort({ created_at: -1 });
 
     const validFilters = [HAS_URL];
     const filterMap = {};
