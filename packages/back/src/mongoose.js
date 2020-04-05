@@ -6,12 +6,13 @@ import './models/userTweets';
 import './models/mostSharedLinks';
 
 export const StartDev = () => {
-  mongoose.connect('mongodb://localhost/test');
+  const URL = process.env.MONGO_URL || 'mongodb://localhost/test';
+  mongoose.connect(URL);
   return mongoose;
 };
 
 
 export const StartTest = () => {
-  mongoose.connect('mongodb://localhost/test2');
+  mongoose.connect('mongodb://localhost/test');
   return mongoose;
 };
