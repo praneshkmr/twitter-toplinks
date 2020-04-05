@@ -3,12 +3,13 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import HomePageContainer from './containers/HomePageContainer';
 import TwitterAuthCallbackContainer from './containers/TwitterAuthCallbackContainer';
+import TwitterDashboardPageContainer from './containers/TwitterDashboardPageContainer';
 
 function App() {
   const [user, setUser] = useState(null);
   const [, setError] = useState(null);
   useEffect(() => {
-    fetch('http://localhost:5000/user/me', { credentials: 'include' })
+    fetch('http://localhost:5000/users/me', { credentials: 'include' })
       .then((res) => res.json())
       .then((data) => setUser(data))
       .catch((err) => setError(err.message));
@@ -18,6 +19,9 @@ function App() {
       <Switch>
         <Route path="/auth/twitter/callback" exact>
           <TwitterAuthCallbackContainer setUser={setUser} setError={setError} />
+        </Route>
+        <Route path="/dashboard" exact>
+          <TwitterDashboardPageContainer user={user} />
         </Route>
         <Route path="/">
           <HomePageContainer user={user} />

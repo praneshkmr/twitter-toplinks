@@ -6,7 +6,7 @@ const TwitterAuthCallbackContainer = ({ setUser, setError }) => {
   const queryParams = useLocation().search;
   const history = useHistory();
   useEffect(() => {
-    fetch(`http://localhost:5000/auth/twitter/callback${queryParams}`, { credentials: 'include' }).then(() => fetch('http://localhost:5000/user/me', { credentials: 'include' })
+    fetch(`http://localhost:5000/auth/twitter/callback${queryParams}`, { credentials: 'include' }).then(() => fetch('http://localhost:5000/users/me', { credentials: 'include' })
       .then((res) => res.json())
       .then((data) => setUser(data))
       .catch((err) => setError(err.message))
