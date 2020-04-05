@@ -12,6 +12,7 @@ import { SearchTweets } from './external/twitter';
 import { GetTweetsStats } from './services/tweets_service';
 import { GetUserTweets } from './models/userTweets';
 import { RequireUser } from './utils/auth';
+import Config from './config';
 
 const app = express();
 
@@ -20,7 +21,7 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(session({ secret: 'very secret', resave: false, saveUninitialized: true }));
 const corsOptions = {
-  origin: 'http://localhost:3000',
+  origin: Config.FRONTEND_URL,
   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
   credentials: true,
 };
