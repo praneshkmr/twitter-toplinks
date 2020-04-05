@@ -9,7 +9,7 @@ function App() {
   const [user, setUser] = useState(null);
   const [, setError] = useState(null);
   useEffect(() => {
-    fetch('http://localhost:5000/users/me', { credentials: 'include' })
+    fetch('/users/me', { credentials: 'include' })
       .then((res) => res.json())
       .then((data) => setUser(data))
       .catch((err) => setError(err.message));
@@ -17,7 +17,7 @@ function App() {
   return (
     <Router>
       <Switch>
-        <Route path="/auth/twitter/callback" exact>
+        <Route path="/twitter/callback" exact>
           <TwitterAuthCallbackContainer setUser={setUser} setError={setError} />
         </Route>
         <Route path="/dashboard" exact>

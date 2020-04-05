@@ -5,7 +5,7 @@ import { userPropType } from '../proptypes/user';
 
 const HomePageContainer = ({ user }) => {
   const twitterLogin = async () => {
-    const res = await fetch('http://localhost:5000/auth/twitter/');
+    const res = await fetch('/auth/twitter/');
     const json = await res.json();
     const { oauthRequestToken } = json;
     window.location.href = `https://twitter.com/oauth/authorize?oauth_token=${oauthRequestToken}`;

@@ -8,7 +8,7 @@ const TwitterDashboardPageContainer = ({ user }) => {
   const [tweets, setTweets] = useState(null);
 
   const fetchTweets = async (page) => {
-    const res = await fetch(`http://localhost:5000/tweets/?page=${page}`, { credentials: 'include' });
+    const res = await fetch(`/tweets/?page=${page}`, { credentials: 'include' });
     const json = await res.json();
     setTweets(json);
     setIsFetchingDone(true);
@@ -16,7 +16,7 @@ const TwitterDashboardPageContainer = ({ user }) => {
 
   useEffect(() => {
     fetchTweets();
-  }, tweets);
+  }, []);
 
   if (!user) {
     return <Redirect to="/" />;
