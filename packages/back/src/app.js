@@ -8,9 +8,7 @@ import cors from 'cors';
 import usersRoutes from './routes/users';
 import twitterRoutes from './routes/twitter';
 import tweetsRoute from './routes/tweets';
-import { SearchTweets } from './external/twitter';
 import { GetTweetsStats } from './services/tweets_service';
-import { GetUserTweets } from './models/userTweets';
 import { RequireUser } from './utils/auth';
 import Config from './config';
 
@@ -48,28 +46,6 @@ app.get('/process', RequireUser(), (req, res) => {
 app.get('/stats', (req, res) => {
   GetTweetsStats().then((results) => {
     res.send(results);
-  }).catch(((error) => {
-    res.status(500).send(error.message);
-  }));
-});
-
-app.get('/tweets', RequireUser(), (req, res) => {
-  const { user } = req.session;
-  GetUserTweets(user).then((userTweets) => {
-    res.send(userTweets);
-  }).catch(((error) => {
-    res.status(500).send(error.message);
-  }));
-});
-
-app.get('/tweets/search', RequireUser(), (req, res) => {
-  const { user } = req.session;
-  const { oauth } = user;
-  const { twitter } = oauth;
-  const { oauthAccessToken, oauthAccessTokenSecret } = twitter;
-  const options = req.query;
-  SearchTweets(oauthAccessToken, oauthAccessTokenSecret, options).then((tweets) => {
-    res.send(tweets);
   }).catch(((error) => {
     res.status(500).send(error.message);
   }));

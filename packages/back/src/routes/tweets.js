@@ -5,6 +5,7 @@ import Tweets from '../models/tweet';
 import UserTweets from '../models/userTweets';
 import { AddPagination, AddFilters } from '../utils/filters';
 import { TweetHasURLFilter } from './filters/tweetsFilter';
+import { SearchTweets } from '../external/twitter';
 
 const router = express.Router();
 
@@ -35,6 +36,19 @@ router.get('/', RequireUser(), (req, res) => {
       }
     });
   });
+});
+
+router.get('/search', RequireUser(), (req, res) => {
+  const { user } = req.session;
+  const { oauth } = user;
+  const { twitter } = oauth;
+  const { oauthAccessToken, oauthAccessTokenSecret } = twitter;
+  const options = req.query;
+  SearchTweets(oauthAccessToken, oauthAccessTokenSecret, options).then((tweets) => {
+    res.send(tweets);
+  }).catch(((error) => {
+    res.status(500).send(error.message);
+  }));
 });
 
 export default router;
