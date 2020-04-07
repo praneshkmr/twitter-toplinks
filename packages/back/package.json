@@ -10,7 +10,7 @@
     "lint": "npx eslint --fix *.js src test *.js",
     "precommit": "lint-staged && yarn test",
     "compile": "babel src --out-dir .compiled --source-maps --watch",
-    "test": "jest"
+    "test": "jest --forceExit"
   },
   "keywords": [],
   "author": "",
