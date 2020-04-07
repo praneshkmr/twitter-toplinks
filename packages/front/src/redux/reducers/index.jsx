@@ -5,6 +5,7 @@ import twitterRequestTokenReducer from './twitterRequestToken';
 import twitterAuthReducer from './twitterAuth';
 import tweetsReducer from './tweets';
 import statsReducer from './stats';
+import searchTweetsReducer from './searchTweets';
 
 export default combineReducers({
   currentUser: currentUserReducer,
@@ -12,4 +13,5 @@ export default combineReducers({
   twitterAuth: twitterAuthReducer,
   tweets: tweetsReducer,
   stats: statsReducer,
+  searchTweets: searchTweetsReducer,
 });

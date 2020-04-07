@@ -65,21 +65,17 @@ export const GetHomeTimeline = (oauthAccessToken, oauthAccessTokenSecret, option
 
 export const SearchTweets = (oauthAccessToken, oauthAccessTokenSecret, options) => new Promise((resolve, reject) => {
   let paramsText = '';
-  if (!options.q) {
-    reject(new Error('q param is required'));
-  }
-  if (options) {
-    const {
-      q, latitude, longitude, radius,
-    } = options;
-    const params = {
-      q, latitude, longitude, radius,
-    };
-    paramsText = GetQueryParams(params);
+  if (options.tag) {
+    paramsText = `q=%23${options.tag}`; // %23 is #
+  } else if (options.latitude && options.longitude && options.radius) {
+    paramsText = `geocode=${options.latitude},${options.longitude},${options.radius}`;
+  } else {
+    reject(new Error('Query params not supported'));
   }
   consumer.get(`https://api.twitter.com/1.1/search/tweets.json?${paramsText}`, oauthAccessToken, oauthAccessTokenSecret,
     (error, data) => {
       if (error) {
+        console.log(error);
         reject(error);
       } else {
         const parsedData = JSON.parse(data);

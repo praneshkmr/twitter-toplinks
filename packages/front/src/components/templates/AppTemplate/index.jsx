@@ -12,7 +12,9 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import { Twitter, BarChart, ExitToApp } from '@material-ui/icons';
+import {
+  Twitter, BarChart, ExitToApp, Search,
+} from '@material-ui/icons';
 import { useHistory } from 'react-router-dom';
 import { userPropType } from '../../../proptypes/user';
 
@@ -42,6 +44,8 @@ const AppTemplate = ({ user, children, logoutUser }) => {
   const AuthUserMenuItems = [
     { text: 'Tweets', icon: <Twitter />, onClick: () => history.push('/dashboard') },
     { text: 'Stats', icon: <BarChart />, onClick: () => history.push('/stats') },
+    { text: 'Search by Hashtag', icon: <Search />, onClick: () => history.push('/hashtag-search') },
+    { text: 'Search by Location', icon: <Search />, onClick: () => history.push('/location-search') },
     { text: 'Logout', icon: <ExitToApp />, onClick: logoutUser },
   ];
 

@@ -7,6 +7,8 @@ import HomePageContainer from './containers/HomePageContainer';
 import TwitterAuthCallbackContainer from './containers/TwitterAuthCallbackContainer';
 import TwitterDashboardPageContainer from './containers/TwitterDashboardPageContainer';
 import StatsPageContainer from './containers/StatsPageContainer';
+import TweetsLocationSearchPageContainer from './containers/TweetsLocationSearchPageContainer';
+import TweetsQuerySearchPageContainer from './containers/TweetsQuerySearchPageContainer';
 
 function App() {
   return (
@@ -21,6 +23,12 @@ function App() {
           </Route>
           <Route path="/stats" exact>
             <StatsPageContainer />
+          </Route>
+          <Route path="/hashtag-search" exact>
+            <TweetsQuerySearchPageContainer />
+          </Route>
+          <Route path="/location-search" exact>
+            <TweetsLocationSearchPageContainer />
           </Route>
           <Route path="/">
             <HomePageContainer />
