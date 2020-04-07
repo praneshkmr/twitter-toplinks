@@ -4,7 +4,7 @@ import { styled, makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import { Typography } from '@material-ui/core';
 
-import AppTemplate from '../../templates/AppTemplate';
+import AppTemplateContainer from '../../../containers/AppTemplateContainer';
 
 const useStyles = makeStyles({
   wrapper: {
@@ -31,13 +31,13 @@ const MyButton = styled(Button)({
 const HomePage = ({ user, twitterLogin }) => {
   const classes = useStyles();
   return (
-    <AppTemplate user={user}>
+    <AppTemplateContainer>
       <div className={classes.wrapper}>
         <Typography variant="h3" className={classes.heading}>Welcome to Twitter TopLinks</Typography>
         {!user && <MyButton onClick={twitterLogin}>Login with Twitter</MyButton>}
         {user && <Typography variant="h5" className={classes.heading}>Use Top Menu to Navigate</Typography>}
       </div>
-    </AppTemplate>
+    </AppTemplateContainer>
   );
 };
 

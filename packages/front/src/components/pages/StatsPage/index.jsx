@@ -5,9 +5,8 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 
-import AppTemplate from '../../templates/AppTemplate';
 import StatsTable from '../../molecules/StatsTable';
-import { userPropType } from '../../../proptypes/user';
+import AppTemplateContainer from '../../../containers/AppTemplateContainer';
 
 const useStyles = makeStyles({
   wrapper: {
@@ -21,13 +20,13 @@ const useStyles = makeStyles({
 });
 
 const StatsPage = ({
-  user, isFetchingDone, stats,
+  isFetchingDone, stats,
 }) => {
   const classes = useStyles();
   const { mostLinkSharingUsers } = stats;
   const headings = ['User', 'Count'];
   return (
-    <AppTemplate user={user}>
+    <AppTemplateContainer>
       <div className={classes.wrapper}>
         <Typography variant="h3" className={classes.heading}>Stats</Typography>
         {isFetchingDone && (
@@ -38,12 +37,11 @@ const StatsPage = ({
         )}
         {!isFetchingDone && <div>Loading Stats...</div>}
       </div>
-    </AppTemplate>
+    </AppTemplateContainer>
   );
 };
 
 StatsPage.propTypes = {
-  user: userPropType,
   isFetchingDone: bool,
   stats: shape({
     mostLinkSharingUsers: arrayOf(shape({ name: string, count: number })),

@@ -11,4 +11,9 @@ usersRoute.get('/me', (req, res) => {
   }
 });
 
+usersRoute.get('/logout', (req, res) => {
+  req.session.user = null;
+  res.sendStatus(200);
+});
+
 export default usersRoute;

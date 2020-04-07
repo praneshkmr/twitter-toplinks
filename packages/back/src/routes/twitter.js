@@ -45,9 +45,4 @@ router.get('/callback', (req, res) => {
   }
 });
 
-router.get('/logout', (req, res) => {
-  req.session.user = null;
-  res.sendStatus(200);
-});
-
 export default router;

@@ -4,6 +4,7 @@ import {
   FETCH_CURRENT_USER,
   SET_CURRENT_USER,
   SET_CURRENT_USER_ERROR,
+  RESET_CURRENT_USER,
 } from '../actions/types';
 
 export default function (state = {}, action) {
@@ -12,6 +13,8 @@ export default function (state = {}, action) {
       return { data: action.payload };
     case SET_CURRENT_USER_ERROR:
       return { error: action.payload };
+    case RESET_CURRENT_USER:
+      return {};
     case API_START:
       if (action.payload === FETCH_CURRENT_USER) {
         return {
