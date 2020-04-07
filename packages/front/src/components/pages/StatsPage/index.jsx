@@ -1,12 +1,13 @@
 import React from 'react';
 import {
-  bool, arrayOf, shape, string,
+  bool, arrayOf, shape, string, number,
 } from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 
 import AppTemplate from '../../templates/AppTemplate';
 import StatsTable from '../../molecules/StatsTable';
+import { userPropType } from '../../../proptypes/user';
 
 const useStyles = makeStyles({
   wrapper: {
@@ -20,17 +21,18 @@ const useStyles = makeStyles({
 });
 
 const StatsPage = ({
-  isFetchingDone, stats,
+  user, isFetchingDone, stats,
 }) => {
   const classes = useStyles();
   const { mostLinkSharingUsers } = stats;
   const headings = ['User', 'Count'];
   return (
-    <AppTemplate>
+    <AppTemplate user={user}>
       <div className={classes.wrapper}>
         <Typography variant="h3" className={classes.heading}>Stats</Typography>
         {isFetchingDone && (
           <>
+            <Typography variant="h5" className={classes.heading}>Most Link Sharing Users</Typography>
             <StatsTable headings={headings} mostLinkSharingUsers={mostLinkSharingUsers} />
           </>
         )}
@@ -41,9 +43,10 @@ const StatsPage = ({
 };
 
 StatsPage.propTypes = {
+  user: userPropType,
   isFetchingDone: bool,
   stats: shape({
-    mostLinkSharingUsers: arrayOf(string),
+    mostLinkSharingUsers: arrayOf(shape({ name: string, count: number })),
   }),
 };
 

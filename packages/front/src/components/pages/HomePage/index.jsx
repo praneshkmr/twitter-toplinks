@@ -31,11 +31,11 @@ const MyButton = styled(Button)({
 const HomePage = ({ user, twitterLogin }) => {
   const classes = useStyles();
   return (
-    <AppTemplate>
+    <AppTemplate user={user}>
       <div className={classes.wrapper}>
         <Typography variant="h3" className={classes.heading}>Welcome to Twitter TopLinks</Typography>
         {!user && <MyButton onClick={twitterLogin}>Login with Twitter</MyButton>}
-        {user && <div>User Present</div>}
+        {user && <Typography variant="h5" className={classes.heading}>Use Top Menu to Navigate</Typography>}
       </div>
     </AppTemplate>
   );

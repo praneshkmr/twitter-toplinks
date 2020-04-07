@@ -19,6 +19,7 @@ const TwitterDashboardPageContainer = ({ currentUser, tweets, fetchTweets }) => 
   }
   return (
     <TwitterDashboardPage
+      user={currentUser.data}
       isFetchingDone={!tweets.isLoadingData}
       tweets={tweets.data ? tweets.data.data : []}
       count={tweets.data ? tweets.data.meta?.count : 0}

@@ -17,6 +17,7 @@ const StatsPageContainer = ({ currentUser, stats, fetchStats }) => {
   }
   return (
     <StatsPage
+      user={currentUser.data}
       isFetchingDone={stats.data ? !stats.isLoadingData : false}
       stats={stats.data ? stats.data : {}}
     />

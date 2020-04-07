@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { shape, func, string } from 'prop-types';
@@ -17,9 +16,6 @@ const HomePageContainer = (props) => {
     }
   }, [twitterRequestToken.data]);
 
-  if (currentUser.data) {
-    return <Redirect to="/dashboard" />;
-  }
   return (
     <HomePage user={currentUser.data} twitterLogin={() => fetchTwitterRequestToken()} />
   );

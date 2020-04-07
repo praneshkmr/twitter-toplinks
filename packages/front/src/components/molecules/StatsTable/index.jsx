@@ -7,7 +7,9 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import { string, arrayOf } from 'prop-types';
+import {
+  string, arrayOf, number, shape,
+} from 'prop-types';
 
 const useStyles = makeStyles({
   table: {
@@ -22,7 +24,7 @@ const StatsTable = ({ headings, mostLinkSharingUsers }) => {
       <Table className={classes.table} aria-label="simple table">
         <TableHead>
           <TableRow>
-            {headings.map((heading) => (<TableCell>{heading}</TableCell>))}
+            {headings.map((heading) => (<TableCell key={heading}>{heading}</TableCell>))}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -42,7 +44,7 @@ const StatsTable = ({ headings, mostLinkSharingUsers }) => {
 
 StatsTable.propTypes = {
   headings: arrayOf(string),
-  mostLinkSharingUsers: arrayOf(string),
+  mostLinkSharingUsers: arrayOf(shape({ name: string, count: number })),
 };
 
 export default StatsTable;

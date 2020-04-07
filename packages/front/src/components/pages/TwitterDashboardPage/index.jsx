@@ -9,6 +9,7 @@ import Pagination from '@material-ui/lab/Pagination';
 import AppTemplate from '../../templates/AppTemplate';
 import Tweet from '../../atoms/Tweet';
 import { tweetPropType } from '../../../proptypes/tweet';
+import { userPropType } from '../../../proptypes/user';
 
 const useStyles = makeStyles({
   wrapper: {
@@ -35,11 +36,11 @@ const useStyles = makeStyles({
 });
 
 const TwitterDashboardPage = ({
-  isFetchingDone, tweets, count, page, onPageChange,
+  user, isFetchingDone, tweets, count, page, onPageChange,
 }) => {
   const classes = useStyles();
   return (
-    <AppTemplate>
+    <AppTemplate user={user}>
       <div className={classes.wrapper}>
         <Typography variant="h3" className={classes.heading}>Tweets</Typography>
         {isFetchingDone && (
@@ -68,6 +69,7 @@ const TwitterDashboardPage = ({
 };
 
 TwitterDashboardPage.propTypes = {
+  user: userPropType,
   isFetchingDone: bool,
   tweets: arrayOf(tweetPropType),
   count: number,
