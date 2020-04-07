@@ -19,7 +19,6 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   childrenWrapper: {
-    width: '100%',
     margin: '24px',
   },
 }));

@@ -6,6 +6,7 @@ import store from './redux/store';
 import HomePageContainer from './containers/HomePageContainer';
 import TwitterAuthCallbackContainer from './containers/TwitterAuthCallbackContainer';
 import TwitterDashboardPageContainer from './containers/TwitterDashboardPageContainer';
+import StatsPageContainer from './containers/StatsPageContainer';
 
 function App() {
   return (
@@ -17,6 +18,9 @@ function App() {
           </Route>
           <Route path="/dashboard" exact>
             <TwitterDashboardPageContainer />
+          </Route>
+          <Route path="/stats" exact>
+            <StatsPageContainer />
           </Route>
           <Route path="/">
             <HomePageContainer />

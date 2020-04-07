@@ -20,3 +20,7 @@ export const SET_TWITTER_AUTH_ERROR = 'SET_TWITTER_AUTH_ERROR';
 export const FETCH_TWEETS = 'FETCH_TWEETS';
 export const SET_TWEETS = 'SET_TWEETS';
 export const SET_TWEETS_ERROR = 'SET_TWEETS_ERROR';
+
+export const FETCH_STATS = 'FETCH_STATS';
+export const SET_STATS = 'SET_STATS';
+export const SET_STATS_ERROR = 'SET_STATS_ERROR';
