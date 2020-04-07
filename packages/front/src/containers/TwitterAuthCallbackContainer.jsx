@@ -18,10 +18,10 @@ const TwitterAuthCallbackContainer = (props) => {
   }, [queryParams]);
   useEffect(() => {
     fetchCurrentUser();
-  }, [twitterAuth.data]);
+  }, [twitterAuth ? twitterAuth.data : {}]);
   useEffect(() => {
     history.push('/');
-  }, [currentUser.data]);
+  }, [currentUser ? currentUser.data : {}]);
 
   return (
     <div>Loading...</div>
