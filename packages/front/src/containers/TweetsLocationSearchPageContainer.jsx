@@ -31,7 +31,7 @@ const TweetsLocationSearchPageContainer = ({ currentUser, searchTweets, fetchSea
   const handleLocationChange = (event) => {
     setLocation(event.target.value);
   };
-  console.log(searchTweets);
+
   return (
     <TweetsLocationSearchPage
       isFetchingDone={!searchTweets.isLoadingData}
