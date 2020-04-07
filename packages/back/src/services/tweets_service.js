@@ -3,7 +3,7 @@ import parallel from 'async/parallel';
 
 import { GetHomeTimeline } from '../external/twitter';
 import { GetOldestTweet, SetUserTweets } from '../models/userTweets';
-import { GetTweetsContainingLink, CalculateMostSharedLinksUser } from '../models/tweet';
+import Tweets, { GetTweetsContainingLink, CalculateMostSharedLinksUser } from '../models/tweet';
 import { GetMostLinkSharingUser } from '../models/mostSharedLinks';
 
 export const Store7DaysTweets = (user) => new Promise((resolve, reject) => {
@@ -75,6 +75,9 @@ export const GetTweetsStats = () => new Promise((resolve, reject) => {
           callback(null, result);
         });
       }).catch((err) => callback(err));
+    },
+    totalTweets: (callback) => {
+      Tweets.count().exec(callback);
     },
   }, (err, results) => {
     if (err) {
