@@ -1,25 +1,51 @@
 import React, { useEffect } from 'react';
-import { func } from 'prop-types';
+import { connect } from 'react-redux';
+import { func, string, shape } from 'prop-types';
 import { useLocation, useHistory } from 'react-router-dom';
 
-const TwitterAuthCallbackContainer = ({ setUser, setError }) => {
+import { fetchCurrentUser } from '../redux/actions/currentUser';
+import { fetchTwitterAuth } from '../redux/actions/twitterAuth';
+import { userPropType } from '../proptypes/user';
+
+const TwitterAuthCallbackContainer = (props) => {
   const queryParams = useLocation().search;
   const history = useHistory();
+  const {
+    fetchCurrentUser, fetchTwitterAuth, twitterAuth, currentUser,
+  } = props;
   useEffect(() => {
-    fetch(`/auth/twitter/callback${queryParams}`, { credentials: 'include' }).then(() => fetch('/users/me', { credentials: 'include' })
-      .then((res) => res.json())
-      .then((data) => setUser(data))
-      .catch((err) => setError(err.message))
-      .then(() => { history.push('/'); }));
-  }, []);
+    fetchTwitterAuth({ queryParams });
+  }, [queryParams]);
+  useEffect(() => {
+    fetchCurrentUser();
+  }, [twitterAuth.data]);
+  useEffect(() => {
+    history.push('/');
+  }, [currentUser.data]);
+
   return (
     <div>Loading...</div>
   );
 };
 
 TwitterAuthCallbackContainer.propTypes = {
-  setUser: func.isRequired,
-  setError: func.isRequired,
+  currentUser: shape({
+    data: userPropType,
+  }),
+  twitterAuth: shape({
+    data: string,
+  }),
+  fetchCurrentUser: func.isRequired,
+  fetchTwitterAuth: func.isRequired,
 };
 
-export default TwitterAuthCallbackContainer;
+const mapStateToProps = ({ currentUser, twitterAuth }) => ({
+  currentUser,
+  twitterAuth,
+});
+const mapDispatchToProps = {
+  fetchCurrentUser,
+  fetchTwitterAuth,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(TwitterAuthCallbackContainer);

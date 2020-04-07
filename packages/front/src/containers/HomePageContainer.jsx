@@ -1,26 +1,48 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+
+import { shape, func, string } from 'prop-types';
 import HomePage from '../components/pages/HomePage';
 import { userPropType } from '../proptypes/user';
+import { fetchTwitterRequestToken } from '../redux/actions/twitterRequestToken';
 
-const HomePageContainer = ({ user }) => {
-  const twitterLogin = async () => {
-    const res = await fetch('/auth/twitter/');
-    const json = await res.json();
-    const { oauthRequestToken } = json;
-    window.location.href = `https://twitter.com/oauth/authorize?oauth_token=${oauthRequestToken}`;
-  };
+const HomePageContainer = (props) => {
+  const { currentUser, twitterRequestToken, fetchTwitterRequestToken } = props;
 
-  if (user) {
+  useEffect(() => {
+    if (twitterRequestToken && twitterRequestToken.data) {
+      const { oauthRequestToken } = twitterRequestToken.data;
+      window.location.href = `https://twitter.com/oauth/authorize?oauth_token=${oauthRequestToken}`;
+    }
+  }, [twitterRequestToken.data]);
+
+  if (currentUser.data) {
     return <Redirect to="/dashboard" />;
   }
   return (
-    <HomePage user={user} twitterLogin={() => twitterLogin()} />
+    <HomePage user={currentUser.data} twitterLogin={() => fetchTwitterRequestToken()} />
   );
 };
 
 HomePageContainer.propTypes = {
-  user: userPropType,
+  currentUser: shape({
+    data: userPropType,
+  }),
+  twitterRequestToken: shape({
+    data: shape({
+      oauthRequestToken: string,
+    }),
+  }),
+  fetchTwitterRequestToken: func.isRequired,
 };
 
-export default HomePageContainer;
+const mapStateToProps = ({ currentUser, twitterRequestToken }) => ({
+  currentUser,
+  twitterRequestToken,
+});
+const mapDispatchToProps = {
+  fetchTwitterRequestToken,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomePageContainer);

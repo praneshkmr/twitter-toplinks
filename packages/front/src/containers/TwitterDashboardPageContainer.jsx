@@ -1,32 +1,27 @@
 import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
+
+import { shape, bool, func } from 'prop-types';
 import TwitterDashboardPage from '../components/pages/TwitterDashboardPage';
 import { userPropType } from '../proptypes/user';
+import { fetchTweets } from '../redux/actions/tweets';
+import { tweetsPropType } from '../proptypes/tweet';
 
-const TwitterDashboardPageContainer = ({ user }) => {
-  const [isFetchingDone, setIsFetchingDone] = useState(false);
-  const [tweets, setTweets] = useState(null);
-
-  const fetchTweets = async (page) => {
-    const res = await fetch(`/tweets/?page=${page}`, { credentials: 'include' });
-    const json = await res.json();
-    setTweets(json);
-    setIsFetchingDone(true);
-  };
-
+const TwitterDashboardPageContainer = ({ currentUser, tweets, fetchTweets }) => {
   const [page, setPage] = useState(1);
   useEffect(() => {
-    fetchTweets(page);
+    fetchTweets({ page });
   }, [page]);
 
-  if (!user) {
+  if (!currentUser.data) {
     return <Redirect to="/" />;
   }
   return (
     <TwitterDashboardPage
-      isFetchingDone={isFetchingDone}
-      tweets={tweets ? tweets.data : []}
-      count={tweets ? tweets.meta?.count : 0}
+      isFetchingDone={!tweets.isLoadingData}
+      tweets={tweets.data ? tweets.data.data : []}
+      count={tweets.data ? tweets.data.meta?.count : 0}
       page={page}
       onPageChange={(_e, value) => setPage(value)}
     />
@@ -34,7 +29,22 @@ const TwitterDashboardPageContainer = ({ user }) => {
 };
 
 TwitterDashboardPageContainer.propTypes = {
-  user: userPropType,
+  currentUser: shape({
+    data: userPropType,
+  }),
+  tweets: shape({
+    data: tweetsPropType,
+    isLoadingData: bool,
+  }),
+  fetchTweets: func.isRequired,
 };
 
-export default TwitterDashboardPageContainer;
+const mapStateToProps = ({ currentUser, tweets }) => ({
+  currentUser,
+  tweets,
+});
+const mapDispatchToProps = {
+  fetchTweets,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(TwitterDashboardPageContainer);

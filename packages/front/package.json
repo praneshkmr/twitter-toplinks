@@ -9,13 +9,17 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+    "axios": "^0.19.2",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-redux": "^7.2.0",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "3.4.1"
+    "react-scripts": "3.4.1",
+    "redux": "^4.0.5",
+    "redux-logger": "^3.0.6"
   },
   "scripts": {
     "start": "cross-env CI=true react-scripts start",
@@ -57,7 +61,8 @@
       "import/prefer-default-export": 0,
       "react/jsx-props-no-spreading": 0,
       "jsx-a11y/click-events-have-key-events": 0,
-      "jsx-a11y/no-static-element-interactions": 0
+      "jsx-a11y/no-static-element-interactions": 0,
+      "no-shadow": 0
     }
   },
   "browserslist": {

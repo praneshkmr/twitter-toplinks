@@ -1,4 +1,6 @@
-import { number, string, shape } from 'prop-types';
+import {
+  number, string, shape, arrayOf,
+} from 'prop-types';
 
 export const tweetPropType = shape({
   id: number,
@@ -8,5 +10,12 @@ export const tweetPropType = shape({
     name: string,
     profile_image_url: string,
     screen_name: string,
+  }),
+});
+
+export const tweetsPropType = shape({
+  data: arrayOf(tweetPropType),
+  meta: shape({
+    count: number,
   }),
 });
