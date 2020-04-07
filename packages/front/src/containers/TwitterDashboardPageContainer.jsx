@@ -14,15 +14,22 @@ const TwitterDashboardPageContainer = ({ user }) => {
     setIsFetchingDone(true);
   };
 
+  const [page, setPage] = useState(1);
   useEffect(() => {
-    fetchTweets();
-  }, []);
+    fetchTweets(page);
+  }, [page]);
 
   if (!user) {
     return <Redirect to="/" />;
   }
   return (
-    <TwitterDashboardPage isFetchingDone={isFetchingDone} tweets={tweets} />
+    <TwitterDashboardPage
+      isFetchingDone={isFetchingDone}
+      tweets={tweets ? tweets.data : []}
+      count={tweets ? tweets.meta?.count : 0}
+      page={page}
+      onPageChange={(_e, value) => setPage(value)}
+    />
   );
 };
 

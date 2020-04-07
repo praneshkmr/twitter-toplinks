@@ -23,7 +23,8 @@ describe('tweets route', () => {
 
           const authApp = GetAuthApp(app, authUser);
           const res = await request(authApp).get('/tweets');
-          expect(res.body).toHaveLength(1);
+          expect(res.body.data).toHaveLength(1);
+          expect(res.body.meta.count).toEqual(1);
         }).finally(async () => {
           await userTweets.delete();
         });

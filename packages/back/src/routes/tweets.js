@@ -12,7 +12,7 @@ const router = express.Router();
 router.get('/', RequireUser(), (req, res) => {
   const { user } = req.session;
 
-  UserTweets.findOne({ user }).then((userTweets) => {
+  UserTweets.findOne({ user }).then(async (userTweets) => {
     const tweetsQuery = userTweets.toJSON().tweets.map((tweet) => (tweet));
     const dbPromise = Tweets.find({ _id: { $in: tweetsQuery } }).sort({ created_at: -1 });
 
@@ -24,17 +24,18 @@ router.get('/', RequireUser(), (req, res) => {
       res.status(400).send(err.message);
     });
 
+    const countQuery = dbPromise.model.find().merge(dbPromise);
+
     AddPagination(dbPromise, req).catch((err) => {
       res.status(500).send(err.message);
     });
 
-    dbPromise.exec((err, tweets) => {
-      if (err) {
-        res.status(400).send(err.message);
-      } else {
-        res.send(tweets);
-      }
-    });
+    try {
+      const [tweets, count] = await Promise.all([dbPromise, countQuery.count()]);
+      res.send({ data: tweets, meta: { count } });
+    } catch (err) {
+      res.status(500).send(err.message);
+    }
   });
 });
 
