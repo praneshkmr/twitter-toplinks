@@ -6,12 +6,13 @@ export const GetTestUser = ({ name }) => new User({
   name,
 });
 
-export const GetTestTweet = ({ text }) => {
+export const GetTestTweet = ({ text, entities }) => {
   const timestamp = (new Date()).getTime();
   return new Tweet({
     id: timestamp,
     id_str: `${timestamp}`,
     text,
+    entities,
   });
 };
 
