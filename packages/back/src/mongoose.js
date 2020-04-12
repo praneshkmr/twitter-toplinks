@@ -4,6 +4,7 @@ import './models/user';
 import './models/tweet';
 import './models/userTweets';
 import './models/mostSharedLinks';
+import './models/topSharedDomains';
 
 export const StartDev = () => {
   const URL = process.env.MONGO_URL || 'mongodb://localhost/twitter-toplinks';

@@ -17,7 +17,7 @@ const useStyles = makeStyles({
   },
 });
 
-const StatsTable = ({ headings, mostLinkSharingUsers }) => {
+const StatsTable = ({ headings, values }) => {
   const classes = useStyles();
   return (
     <TableContainer component={Paper}>
@@ -28,7 +28,7 @@ const StatsTable = ({ headings, mostLinkSharingUsers }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {mostLinkSharingUsers.map((data) => (
+          {values.map((data) => (
             <TableRow key={data.value.name}>
               <TableCell component="th" scope="row">
                 {data.value.name}
@@ -44,7 +44,7 @@ const StatsTable = ({ headings, mostLinkSharingUsers }) => {
 
 StatsTable.propTypes = {
   headings: arrayOf(string),
-  mostLinkSharingUsers: arrayOf(shape({ name: string, count: number })),
+  values: arrayOf(shape({ name: string, count: number })),
 };
 
 export default StatsTable;

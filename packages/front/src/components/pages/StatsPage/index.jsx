@@ -20,6 +20,9 @@ const useStyles = makeStyles({
   mostSharedLinksUsersWrapper: {
     marginBottom: '24px',
   },
+  topSharedDomainsWrapper: {
+    marginBottom: '24px',
+  },
   linkTweetsCountPaper: {
     textAlign: 'center',
     padding: '24px',
@@ -30,8 +33,11 @@ const StatsPage = ({
   isFetchingDone, stats,
 }) => {
   const classes = useStyles();
-  const { mostLinkSharingUsers, totalTweets, tweetsContainingLinkCount } = stats;
+  const {
+    mostLinkSharingUsers, topSharedDomains, totalTweets, tweetsContainingLinkCount,
+  } = stats;
   const headings = ['User', 'Count'];
+  const topDomainsheadings = ['Domain', 'Count'];
   return (
     <AppTemplateContainer>
       <div className={classes.wrapper}>
@@ -40,7 +46,11 @@ const StatsPage = ({
           <>
             <div className={classes.mostSharedLinksUsersWrapper}>
               <Typography variant="h5" className={classes.heading}>Most Link Sharing Users</Typography>
-              <StatsTable headings={headings} mostLinkSharingUsers={mostLinkSharingUsers} />
+              <StatsTable headings={headings} values={mostLinkSharingUsers} />
+            </div>
+            <div className={classes.topSharedDomainsWrapper}>
+              <Typography variant="h5" className={classes.heading}>Top Shared Domains</Typography>
+              <StatsTable headings={topDomainsheadings} values={topSharedDomains} />
             </div>
             <Paper className={classes.linkTweetsCountPaper}>
               <Typography variant="h5">

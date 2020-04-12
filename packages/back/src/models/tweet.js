@@ -130,3 +130,21 @@ export const CalculateMostSharedLinksUser = () => {
     map, reduce, out, finalize,
   });
 };
+
+export const CalculateTopSharedDomains = () => {
+  // These fn execute inside mongodb, so needs to be in Js
+  const query = { 'entities.urls': { $exists: true, $not: { $size: 0 } } };
+  const map = function () {
+    this.entities.urls.forEach((urlObj) => {
+      const url = urlObj.display_url;
+      const domain = url.split('/')[0];
+      emit(domain, 1);
+    });
+  };
+  const reduce = function (domain, count) { return Array.sum(count); };
+  const out = 'topSharedDomains';
+  const finalize = function (key, reducedValue) { return { name: key, count: reducedValue }; };
+  return Tweets.mapReduce({
+    map, reduce, out, finalize, query,
+  });
+};
